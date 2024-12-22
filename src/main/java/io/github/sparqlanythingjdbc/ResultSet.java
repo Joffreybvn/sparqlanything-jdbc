@@ -959,6 +959,11 @@ public class ResultSet implements java.sql.ResultSet {
         return null;
     }
 
-    @Override public <T> T unwrap(Class<T> iface) throws SQLException { return null; }
-    @Override public boolean isWrapperFor(Class<?> iface) throws SQLException { return false; }
+    @Override public <T> T unwrap(Class<T> iface) throws SQLException {
+        return null;
+    }
+
+    @Override public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return false;
+    }
 }

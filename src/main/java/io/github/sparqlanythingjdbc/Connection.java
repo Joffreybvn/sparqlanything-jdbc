@@ -29,21 +29,65 @@ public class Connection implements java.sql.Connection {
     }
 
     // Placeholder methods (not fully implemented)
-    @Override public PreparedStatement prepareStatement(String sql) throws SQLException { return null; }
-    @Override public CallableStatement prepareCall(String sql) throws SQLException { return null; }
-    @Override public String nativeSQL(String sql) throws SQLException { return null; }
-    @Override public void setAutoCommit(boolean autoCommit) throws SQLException {}
-    @Override public boolean getAutoCommit() throws SQLException { return false; }
-    @Override public void commit() throws SQLException {}
-    @Override public void rollback() throws SQLException {}
-    @Override public void setReadOnly(boolean readOnly) throws SQLException {}
-    @Override public boolean isReadOnly() throws SQLException { return false; }
-    @Override public void setCatalog(String catalog) throws SQLException {}
-    @Override public String getCatalog() throws SQLException { return null; }
-    @Override public void setTransactionIsolation(int level) throws SQLException {}
-    @Override public int getTransactionIsolation() throws SQLException { return 0; }
-    @Override public SQLWarning getWarnings() throws SQLException { return null; }
-    @Override public void clearWarnings() throws SQLException {}
+    @Override public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return null;
+    }
+
+    @Override public CallableStatement prepareCall(String sql) throws SQLException {
+        return null;
+    }
+
+    @Override public String nativeSQL(String sql) throws SQLException {
+        return null;
+    }
+
+    @Override public void setAutoCommit(boolean autoCommit) throws SQLException {
+
+    }
+
+    @Override public boolean getAutoCommit() throws SQLException {
+        return false;
+    }
+
+    @Override public void commit() throws SQLException {
+
+    }
+
+    @Override public void rollback() throws SQLException {
+
+    }
+
+    @Override public void setReadOnly(boolean readOnly) throws SQLException {
+
+    }
+
+    @Override public boolean isReadOnly() throws SQLException {
+        return false;
+    }
+
+    @Override public void setCatalog(String catalog) throws SQLException {
+
+    }
+
+    @Override public String getCatalog() throws SQLException {
+        return null;
+    }
+
+    @Override public void setTransactionIsolation(int level) throws SQLException {
+
+    }
+
+    @Override public int getTransactionIsolation() throws SQLException {
+        return 0;
+    }
+
+    @Override public SQLWarning getWarnings() throws SQLException {
+        return null;
+    }
+
+    @Override public void clearWarnings() throws SQLException {
+
+    }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {

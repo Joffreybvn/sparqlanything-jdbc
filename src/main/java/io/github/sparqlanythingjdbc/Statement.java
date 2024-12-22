@@ -32,8 +32,13 @@ public class Statement implements java.sql.Statement {
     }
 
     // Placeholder methods
-    @Override public int executeUpdate(String sql) throws SQLException { return 0; }
-    @Override public boolean execute(String sql) throws SQLException { return false; }
+    @Override public int executeUpdate(String sql) throws SQLException {
+        return 0;
+    }
+
+    @Override public boolean execute(String sql) throws SQLException {
+        return false;
+    }
 
     @Override
     public ResultSet getResultSet() throws SQLException {
@@ -201,7 +206,12 @@ public class Statement implements java.sql.Statement {
         return false;
     }
 
-    @Override public <T> T unwrap(Class<T> iface) throws SQLException { return null; }
-    @Override public boolean isWrapperFor(Class<?> iface) throws SQLException { return false; }
+    @Override public <T> T unwrap(Class<T> iface) throws SQLException {
+        return null;
+    }
+
+    @Override public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return false;
+    }
 }
 
