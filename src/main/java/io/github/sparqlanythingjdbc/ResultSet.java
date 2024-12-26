@@ -87,6 +87,17 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
+    public String getNString(String label) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getNString(index);
+    }
+
+    @Override
+    public String getNString(int index) throws SQLException {
+        return this.getString(index);
+    }
+
+    @Override
     public String getString(String label) throws SQLException {
         for(LiteralLabel entry : this.values) {
             System.out.println(entry.getDatatype().getJavaClass());
@@ -1005,16 +1016,6 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public void updateSQLXML(String label, SQLXML xmlObject) throws SQLException {
 
-    }
-
-    @Override
-    public String getNString(int index) throws SQLException {
-        return "";
-    }
-
-    @Override
-    public String getNString(String label) throws SQLException {
-        return "";
     }
 
     @Override
