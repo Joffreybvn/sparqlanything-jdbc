@@ -7,9 +7,7 @@ import java.util.logging.Logger;
 public class Driver implements java.sql.Driver {
 
     public static final String URL_ID = "jdbc:sparql-anything";
-
     public static final int MAJOR_VERSION = 0;
-
     public static final int MINOR_VERSION = 1;
 
 

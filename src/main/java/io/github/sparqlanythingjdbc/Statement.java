@@ -1,14 +1,28 @@
 package io.github.sparqlanythingjdbc;
 
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+
 import java.sql.*;
 
 
 public class Statement implements java.sql.Statement {
 
+    private final Dataset dataset;
+
+    public Statement(Dataset dataset) {
+        this.dataset = dataset;
+    }
+
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
         System.out.println("Statement: Executing query: " + sql);
-        return new ResultSet();
+
+        Query query = QueryFactory.create(sql);
+        org.apache.jena.query.ResultSet resultSet = QueryExecutionFactory.create(query, this.dataset).execSelect();
+        return new ResultSet(resultSet);
     }
 
     @Override
