@@ -389,13 +389,14 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Object getObject(int index) throws SQLException {
-        return null;
+    public Object getObject(String label) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getObject(index);
     }
 
     @Override
-    public Object getObject(String label) throws SQLException {
-        return null;
+    public Object getObject(int index) throws SQLException {
+        return this.getValueByIndex(index).getValue();
     }
 
     @Override
@@ -412,7 +413,6 @@ public class ResultSet implements java.sql.ResultSet {
     public String getCursorName() throws SQLException {
         return "";
     }
-
 
     @Override
     public int findColumn(String label) throws SQLException {
