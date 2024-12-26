@@ -570,7 +570,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public int getFetchDirection() throws SQLException {
-        return 0;
+        return ResultSet.FETCH_FORWARD;
     }
 
     @Override
