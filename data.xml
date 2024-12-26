@@ -1,0 +1,23 @@
+<foods>
+   <food nameFr="Gaufres" nameEn="Waffles" isHeathly="true">
+      <price>3.5</price>
+      <fat>330</fat>
+      <productionDate>2024-06-25</productionDate>
+      <productionTime>14:30:00</productionTime>
+      <productionDateTime>2024-06-25T14:30:00</productionDateTime>
+   </food>
+   <food nameFr="Frites" nameEn="Chips" isHeathly="true">
+      <price>4.5</price>
+      <fat>540</fat>
+      <productionDate>2024-06-25</productionDate>
+      <productionTime>15:00:00</productionTime>
+      <productionDateTime>2024-06-25T15:00:00</productionDateTime>
+   </food>
+   <food nameFr="Eau" nameEn="Water" isHeathly="false">
+      <price>1.2</price>
+      <fat>0</fat>
+      <productionDate>2024-06-25</productionDate>
+      <productionTime>15:30:00</productionTime>
+      <productionDateTime>2024-06-25T15:30:00</productionDateTime>
+   </food>
+</foods>
