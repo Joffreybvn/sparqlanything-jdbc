@@ -74,6 +74,7 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData {
 
     @Override
     public int getColumnDisplaySize(int index) throws SQLException {
+        // Not possible to determine display size
         return -1;
     }
 

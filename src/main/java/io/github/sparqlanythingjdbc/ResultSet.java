@@ -13,6 +13,10 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.sql.*;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -74,7 +78,7 @@ public class ResultSet implements java.sql.ResultSet {
         System.out.println("ResultSet: ResultSet closed.");
     }
 
-    private LiteralLabel getValueByIndex(int index) throws SQLException {
+    private LiteralLabel getValueByIndex(int index) {
         return this.values.get(index);
     }
 
@@ -264,32 +268,74 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public Date getDate(String label) throws SQLException {
-        return null;
+        int index = this.getMetaData().getColumnIndex(label);
+        return this.getDate(index);
     }
 
     @Override
     public Date getDate(int index) throws SQLException {
-        return null;
+        LiteralLabel value = this.getValueByIndex(index);
+
+        if (this.getMetaData().getColumnType(index) == Types.DATE) {
+            String rawDate = value.toString();
+            try {
+                LocalDate localDate = LocalDate.parse(rawDate);
+                return Date.valueOf(localDate);
+            } catch (DateTimeParseException e) {
+                throw new SQLException("Failed to parse date: " + rawDate, e);
+            }
+        } else {
+            String typeName = value.getValue().getClass().getName();
+            throw new SQLException("Object type '" + typeName + "' cannot be converted to Date.");
+        }
     }
 
     @Override
     public Time getTime(String label) throws SQLException {
-        return null;
+        int index = this.getMetaData().getColumnIndex(label);
+        return this.getTime(index);
     }
 
     @Override
     public Time getTime(int index) throws SQLException {
-        return null;
+        LiteralLabel value = this.getValueByIndex(index);
+
+        if (this.getMetaData().getColumnType(index) == Types.TIME) {
+            String rawTime = value.toString();
+            try {
+                LocalTime localTime = LocalTime.parse(rawTime);
+                return Time.valueOf(localTime);
+            } catch (DateTimeParseException e) {
+                throw new SQLException("Failed to parse time: " + rawTime, e);
+            }
+        } else {
+            String typeName = value.getValue().getClass().getName();
+            throw new SQLException("Object type '" + typeName + "' cannot be converted to Time.");
+        }
     }
 
     @Override
     public Timestamp getTimestamp(String label) throws SQLException {
-        return null;
+        int index = this.getMetaData().getColumnIndex(label);
+        return this.getTimestamp(index);
     }
 
     @Override
     public Timestamp getTimestamp(int index) throws SQLException {
-        return null;
+        LiteralLabel value = this.getValueByIndex(index);
+
+        if (this.getMetaData().getColumnType(index) == Types.TIMESTAMP) {
+            String rawTimestamp = value.toString();
+            try {
+                LocalDateTime localDateTime = LocalDateTime.parse(rawTimestamp);
+                return Timestamp.valueOf(localDateTime);
+            } catch (DateTimeParseException e) {
+                throw new SQLException("Failed to parse timestamp: " + rawTimestamp, e);
+            }
+        } else {
+            String typeName = value.getValue().getClass().getName();
+            throw new SQLException("Object type '" + typeName + "' cannot be converted to Timestamp.");
+        }
     }
 
     @Override
