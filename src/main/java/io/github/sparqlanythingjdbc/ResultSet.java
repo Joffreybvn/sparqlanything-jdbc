@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,11 +30,13 @@ public class ResultSet implements java.sql.ResultSet {
 
     private int position = 0;
 
+    private final Statement statement;
     private final RowSet rowSet;
     private List<LiteralLabel> values = null;
     protected ResultSetMetaData metadata = null;
 
-    public ResultSet(org.apache.jena.query.ResultSet resultSet) {
+    public ResultSet(Statement statement, org.apache.jena.query.ResultSet resultSet) {
+        this.statement = statement;
         this.rowSet = RowSet.adapt(resultSet);
     }
 
@@ -269,18 +273,34 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Date getDate(String label) throws SQLException {
         int index = this.findColumn(label);
-        return this.getDate(index);
+        return this.getDate(index, null);
+    }
+
+    @Override
+    public Date getDate(String label, Calendar calendar) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getDate(index, calendar);
     }
 
     @Override
     public Date getDate(int index) throws SQLException {
+        return this.getDate(index, null);
+    }
+
+    @Override
+    public Date getDate(int index, Calendar calendar) throws SQLException {
         LiteralLabel value = this.getValueByIndex(index);
 
         if (this.getMetaData().getColumnType(index) == Types.DATE) {
             String rawDate = value.toString();
             try {
                 LocalDate localDate = LocalDate.parse(rawDate);
-                return Date.valueOf(localDate);
+                if (calendar != null) {
+                    ZonedDateTime zonedDateTime = localDate.atStartOfDay(calendar.getTimeZone().toZoneId());
+                    return Date.valueOf(zonedDateTime.toLocalDate());
+                } else {
+                    return Date.valueOf(localDate);
+                }
             } catch (DateTimeParseException e) {
                 throw new SQLException("Failed to parse date: " + rawDate, e);
             }
@@ -293,18 +313,35 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Time getTime(String label) throws SQLException {
         int index = this.findColumn(label);
-        return this.getTime(index);
+        return this.getTime(index, null);
+    }
+
+    @Override
+    public Time getTime(String label, Calendar calendar) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getTime(index, calendar);
     }
 
     @Override
     public Time getTime(int index) throws SQLException {
+        return this.getTime(index, null);
+    }
+
+    @Override
+    public Time getTime(int index, Calendar calendar) throws SQLException {
         LiteralLabel value = this.getValueByIndex(index);
 
         if (this.getMetaData().getColumnType(index) == Types.TIME) {
             String rawTime = value.toString();
             try {
                 LocalTime localTime = LocalTime.parse(rawTime);
-                return Time.valueOf(localTime);
+                if (calendar != null) {
+                    LocalDate baseline = LocalDate.of(1970, 1, 1);
+                    ZonedDateTime zonedDateTime = localTime.atDate(baseline).atZone(calendar.getTimeZone().toZoneId());
+                    return Time.valueOf(zonedDateTime.toLocalTime());
+                } else {
+                    return Time.valueOf(localTime);
+                }
             } catch (DateTimeParseException e) {
                 throw new SQLException("Failed to parse time: " + rawTime, e);
             }
@@ -317,18 +354,34 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public Timestamp getTimestamp(String label) throws SQLException {
         int index = this.findColumn(label);
-        return this.getTimestamp(index);
+        return this.getTimestamp(index, null);
+    }
+
+    @Override
+    public Timestamp getTimestamp(String label, Calendar calendar) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getTimestamp(index, calendar);
     }
 
     @Override
     public Timestamp getTimestamp(int index) throws SQLException {
+        return this.getTimestamp(index, null);
+    }
+
+    @Override
+    public Timestamp getTimestamp(int index, Calendar calendar) throws SQLException {
         LiteralLabel value = this.getValueByIndex(index);
 
         if (this.getMetaData().getColumnType(index) == Types.TIMESTAMP) {
             String rawTimestamp = value.toString();
             try {
                 LocalDateTime localDateTime = LocalDateTime.parse(rawTimestamp);
-                return Timestamp.valueOf(localDateTime);
+                if (calendar != null) {
+                    ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(calendar.getTimeZone().toZoneId());
+                    return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
+                } else {
+                    return Timestamp.valueOf(localDateTime);
+                }
             } catch (DateTimeParseException e) {
                 throw new SQLException("Failed to parse timestamp: " + rawTimestamp, e);
             }
@@ -825,36 +878,6 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Date getDate(int index, Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Date getDate(String label, Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Time getTime(int index, Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Time getTime(String label, Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Timestamp getTimestamp(int index, Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Timestamp getTimestamp(String label, Calendar cal) throws SQLException {
-        return null;
-    }
-
-    @Override
     public URL getURL(int index) throws SQLException {
         return null;
     }
@@ -922,11 +945,6 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public void updateRowId(String label, RowId x) throws SQLException {
 
-    }
-
-    @Override
-    public int getHoldability() throws SQLException {
-        return 0;
     }
 
     @Override
