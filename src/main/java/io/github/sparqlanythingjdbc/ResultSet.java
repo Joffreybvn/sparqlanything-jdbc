@@ -89,7 +89,7 @@ public class ResultSet implements java.sql.ResultSet {
             System.out.println(entry.getDatatype().getURI());
             System.out.println(entry.getValue());
         }
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getString(index);
     }
 
@@ -100,7 +100,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public boolean getBoolean(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getBoolean(index);
     }
 
@@ -123,7 +123,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public int getInt(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getInt(index);
     }
 
@@ -147,7 +147,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public float getFloat(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getFloat(index);
     }
 
@@ -171,7 +171,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public short getShort(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getShort(index);
     }
 
@@ -195,7 +195,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public long getLong(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getLong(index);
     }
 
@@ -219,7 +219,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public double getDouble(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getDouble(index);
     }
 
@@ -243,7 +243,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public BigDecimal getBigDecimal(String label, int scale) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getBigDecimal(index, scale);
     }
 
@@ -268,7 +268,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public Date getDate(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getDate(index);
     }
 
@@ -292,7 +292,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public Time getTime(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getTime(index);
     }
 
@@ -316,7 +316,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public Timestamp getTimestamp(String label) throws SQLException {
-        int index = this.getMetaData().getColumnIndex(label);
+        int index = this.findColumn(label);
         return this.getTimestamp(index);
     }
 
@@ -416,7 +416,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public int findColumn(String label) throws SQLException {
-        return 0;
+        return this.getMetaData().getColumnIndex(label);
     }
 
     @Override
