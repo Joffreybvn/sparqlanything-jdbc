@@ -1,5 +1,11 @@
 package io.github.sparqlanythingjdbc;
 
+import io.github.sparqlanything.engine.FacadeX;
+import org.apache.jena.query.ARQ;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.sparql.engine.main.QC;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -8,9 +14,18 @@ import java.util.concurrent.Executor;
 
 public class Connection implements java.sql.Connection {
 
+    private final Dataset dataset;
+
+    public Connection() {
+        // Set FacadeX OpExecutor as default executor factory
+        QC.setFactory(ARQ.getContext(), FacadeX.ExecutorFactory);
+        // Execute the query by using standard Jena ARQ's API
+        this.dataset = DatasetFactory.createGeneral();
+    }
+
     @Override
     public Statement createStatement() throws SQLException {
-        return new Statement();
+        return new Statement(this.dataset);
     }
 
     @Override
