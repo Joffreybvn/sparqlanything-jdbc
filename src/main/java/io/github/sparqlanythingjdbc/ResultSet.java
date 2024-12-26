@@ -574,12 +574,17 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public int getType() throws SQLException {
-        return 0;
+        return ResultSet.TYPE_FORWARD_ONLY;
     }
 
     @Override
     public int getConcurrency() throws SQLException {
-        return 0;
+        return ResultSet.CONCUR_READ_ONLY;
+    }
+
+    @Override
+    public int getHoldability() throws SQLException {
+        return ResultSet.HOLD_CURSORS_OVER_COMMIT;
     }
 
     @Override
@@ -824,7 +829,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public Statement getStatement() throws SQLException {
-        return null;
+        return this.statement;
     }
 
     @Override
