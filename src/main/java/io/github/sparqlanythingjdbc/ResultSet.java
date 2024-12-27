@@ -256,6 +256,30 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
+    public BigDecimal getBigDecimal(String label) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getBigDecimal(index);
+    }
+
+    @Override
+    public BigDecimal getBigDecimal(int index) throws SQLException {
+        Object value = this.getValueByIndex(index).getValue();
+
+        try {
+            return switch (value) {
+                case BigDecimal bigDecimalValue -> bigDecimalValue;
+                case Number numberValue -> BigDecimal.valueOf(numberValue.doubleValue());
+                case String stringValue -> new BigDecimal(stringValue);
+                case Boolean boolValue -> BigDecimal.valueOf(boolValue ? 1.0 : 0.0);
+                default -> throw new IllegalArgumentException("Unsupported object type");
+            };
+        } catch (Exception e) {
+            String typeName = value.getClass().getName();
+            throw new SQLException("Object type '" + typeName + "' cannot be converted to BigDecimal.", e);
+        }
+    }
+
+    @Override
     public BigDecimal getBigDecimal(String label, int scale) throws SQLException {
         int index = this.findColumn(label);
         return this.getBigDecimal(index, scale);
@@ -263,21 +287,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public BigDecimal getBigDecimal(int index, int scale) throws SQLException {
-        Object value = this.getValueByIndex(index).getValue();
-        RoundingMode roundingMode = RoundingMode.HALF_UP;
-
-        try {
-            return switch (value) {
-                case BigDecimal bigDecimalValue -> bigDecimalValue.setScale(scale, roundingMode);
-                case Number numberValue -> BigDecimal.valueOf(numberValue.doubleValue()).setScale(scale, roundingMode);
-                case String stringValue -> new BigDecimal(stringValue).setScale(scale, roundingMode);
-                case Boolean boolValue -> BigDecimal.valueOf(boolValue ? 1.0 : 0.0).setScale(scale, roundingMode);
-                default -> throw new IllegalArgumentException("Unsupported object type");
-            };
-        } catch (Exception e) {
-            String typeName = value.getClass().getName();
-            throw new SQLException("Object type '" + typeName + "' cannot be converted to BigDecimal.");
-        }
+        return this.getBigDecimal(index).setScale(scale, RoundingMode.HALF_UP);
     }
 
     @Override
@@ -472,6 +482,10 @@ public class ResultSet implements java.sql.ResultSet {
     public Object getObject(int index, Map<String, Class<?>> map) throws SQLException {
         String sqlType = this.getMetaData().getColumnTypeName(index);
         Class<?> targetType = map.get(sqlType);
+
+        if (targetType == null) {
+            throw new SQLException("No mapping found for SQL type: " + sqlType);
+        }
         return this.getObject(index, targetType);
     }
 
@@ -537,16 +551,6 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public Reader getCharacterStream(String label) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(int index) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(String label) throws SQLException {
         return null;
     }
 
