@@ -28,6 +28,7 @@ import java.util.Map;
 public class ResultSet implements java.sql.ResultSet {
 
     private int position = 0;
+    private boolean isClosed = false;
 
     private final Statement statement;
     private final RowSet rowSet;
@@ -78,6 +79,7 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public void close() throws SQLException {
         this.rowSet.close();
+        this.isClosed = true;
         System.out.println("ResultSet: ResultSet closed.");
     }
 
@@ -98,11 +100,6 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public String getString(String label) throws SQLException {
-        for(LiteralLabel entry : this.values) {
-            System.out.println(entry.getDatatype().getJavaClass());
-            System.out.println(entry.getDatatype().getURI());
-            System.out.println(entry.getValue());
-        }
         int index = this.findColumn(label);
         return this.getString(index);
     }
@@ -1006,7 +1003,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public boolean isClosed() throws SQLException {
-        return false;
+        return this.isClosed;
     }
 
     @Override

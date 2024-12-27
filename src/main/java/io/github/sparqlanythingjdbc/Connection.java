@@ -15,6 +15,7 @@ import java.util.concurrent.Executor;
 public class Connection implements java.sql.Connection {
 
     private final Dataset dataset;
+    private boolean isClosed = false;
 
     public Connection() {
         // Set FacadeX OpExecutor as default executor factory
@@ -30,17 +31,18 @@ public class Connection implements java.sql.Connection {
 
     @Override
     public void close() throws SQLException {
+        this.isClosed = true;
         System.out.println("Connection: Connection closed.");
     }
 
     @Override
     public boolean isClosed() throws SQLException {
-        return false;
+        return this.isClosed;
     }
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return null;
+        return new DatabaseMetaData();
     }
 
     // Placeholder methods (not fully implemented)

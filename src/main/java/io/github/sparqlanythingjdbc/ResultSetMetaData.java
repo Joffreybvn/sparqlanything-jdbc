@@ -31,7 +31,7 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData {
 
     @Override
     public String getColumnName(int index) throws SQLException {
-        return this.columns.get(index).getName();
+        return this.columns.get(index - 1).getVarName();
     }
 
     public int getColumnIndex(String label) throws SQLException {

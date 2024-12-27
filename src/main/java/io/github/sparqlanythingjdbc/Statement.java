@@ -1,9 +1,6 @@
 package io.github.sparqlanythingjdbc;
 
-import org.apache.jena.query.Dataset;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.*;
 
 import java.sql.*;
 
@@ -11,6 +8,7 @@ import java.sql.*;
 public class Statement implements java.sql.Statement {
 
     private final Dataset dataset;
+    private boolean isClosed = false;
 
     public Statement(Dataset dataset) {
         this.dataset = dataset;
@@ -20,13 +18,18 @@ public class Statement implements java.sql.Statement {
     public ResultSet executeQuery(String sql) throws SQLException {
         System.out.println("Statement: Executing query: " + sql);
 
-        Query query = QueryFactory.create(sql);
-        org.apache.jena.query.ResultSet resultSet = QueryExecutionFactory.create(query, this.dataset).execSelect();
-        return new ResultSet(resultSet);
+        try {
+            Query query = QueryFactory.create(sql);
+            org.apache.jena.query.ResultSet resultSet = QueryExecutionFactory.create(query, this.dataset).execSelect();
+            return new ResultSet(this, resultSet);
+        } catch (QueryParseException e) {
+            throw new SQLException(e);
+        }
     }
 
     @Override
     public void close() throws SQLException {
+        this.isClosed = true;
         System.out.println("Statement: Statement closed.");
     }
 
@@ -198,7 +201,10 @@ public class Statement implements java.sql.Statement {
 
     }
 
-    @Override public boolean isClosed() throws SQLException { return false; }
+    @Override
+    public boolean isClosed() throws SQLException {
+        return this.isClosed;
+    }
 
     @Override
     public void setPoolable(boolean poolable) throws SQLException {
