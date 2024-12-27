@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class ResultSet implements java.sql.ResultSet {
 
     private int position = 0;
@@ -464,6 +463,54 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
+    public Object getObject(String label, Map<String, Class<?>> map) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getObject(index, map);
+    }
+
+    @Override
+    public Object getObject(int index, Map<String, Class<?>> map) throws SQLException {
+        String sqlType = this.getMetaData().getColumnTypeName(index);
+        Class<?> targetType = map.get(sqlType);
+        return this.getObject(index, targetType);
+    }
+
+    @Override
+    public <T> T getObject(String label, Class<T> type) throws SQLException {
+        int index = this.findColumn(label);
+        return this.getObject(index, type);
+    }
+
+    @Override
+    public <T> T getObject(int index, Class<T> type) throws SQLException {
+        Object result;
+
+        if (type == String.class) {
+            result = this.getString(index);
+        } else if (type == Integer.class) {
+            result = this.getInt(index);
+        } else if (type == Long.class) {
+            result = this.getLong(index);
+        } else if (type == Double.class) {
+            result = this.getDouble(index);
+        } else if (type == Float.class) {
+            result = this.getFloat(index);
+        } else if (type == Boolean.class) {
+            result = this.getBoolean(index);
+        } else if (type == Date.class) {
+            result = this.getDate(index);
+        } else if (type == Time.class) {
+            result = this.getTime(index);
+        } else if (type == Timestamp.class) {
+            result = this.getTimestamp(index);
+        } else {
+            throw new SQLException("Cannot return object index " + index + " as type " + type.getName());
+        }
+
+        return type.cast(result);
+    }
+
+    @Override
     public SQLWarning getWarnings() throws SQLException {
         return null;
     }
@@ -844,11 +891,6 @@ public class ResultSet implements java.sql.ResultSet {
     }
 
     @Override
-    public Object getObject(int index, Map<String, Class<?>> map) throws SQLException {
-        return null;
-    }
-
-    @Override
     public Ref getRef(int index) throws SQLException {
         return null;
     }
@@ -865,11 +907,6 @@ public class ResultSet implements java.sql.ResultSet {
 
     @Override
     public Array getArray(int index) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Object getObject(String label, Map<String, Class<?>> map) throws SQLException {
         return null;
     }
 
@@ -1166,16 +1203,6 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public void updateNClob(String label, Reader reader) throws SQLException {
 
-    }
-
-    @Override
-    public <T> T getObject(int index, Class<T> type) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public <T> T getObject(String label, Class<T> type) throws SQLException {
-        return null;
     }
 
     @Override public boolean wasNull() throws SQLException { return false; }
