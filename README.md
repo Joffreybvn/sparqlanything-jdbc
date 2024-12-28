@@ -68,7 +68,7 @@ Currently, this driver focuses on SPARQL `SELECT` queries.
 
 ### Type mapping
 
-Currently supported list of typings and their mappings to Java and SQL types. Feel free to open an [Issue](./issues) or a [Pull Request](./pulls) to add/request new ones.
+Currently supported list of typings and their mappings to Java and SQL types. Feel free to open an [Issue](https://github.com/Joffreybvn/sparqlanything-jdbc/issues) or a [Pull Request](https://github.com/Joffreybvn/sparqlanything-jdbc/pulls) to add/request new ones.
 
 | **XSD Type**   | **Java Class**        | **SQL Type** (`java.sql.Types`) |
 |:---------------|:----------------------|:--------------------------------|
@@ -91,11 +91,33 @@ Currently supported list of typings and their mappings to Java and SQL types. Fe
 **Notes:**
 
 - The driver do the best effort to convert types. _E.g._: You can `getInt()` an untyped String to parse it and getting it as int.
-- For `DATE`, `TIMESTAMP` and `TIME`, driver tries to convert first to `java.sql.Date`, `java.sql.Time` and `java.sql.Timestamp` respectively. If impossible, it falls back to String.
+- For `DATE`, `TIMESTAMP` and `TIME`, driver tries to convert first to `java.sql.Date`, `java.sql.Timestamp` and `java.sql.Time` respectively. If impossible, it falls back to String.
 
 ## Usage
 
 ### DataGrip setup and usage
+
+Quick guide on how to add the driver to Jetbrains' [DataGrip](https://www.jetbrains.com/datagrip/) and run a SPARQL query.
+
+1. Download the JDBC driver bundle.<br>
+   **Alternatively**, clone this repository and run `make build` and `make dependencies`. Then place the generated _target/sparql-anything-jdbc.jar_ into _target/dependency_.
+2. Open DataGrip, navigate to the _Database Explorer_, and click on _New_ > _Driver_.
+3. Configure the driver:
+   - Click on _New Driver_, name it "_SPARQL Anything_".
+   - In _Driver Files_, click on _Add_ > _Custom Jars_ and select all the jars previously downloaded.
+   - In the _Class_ dropdown field, select `io.github.sparqlqnythingjdbc.Driver`
+   - _Apply_
+   
+   ![DataGrip Setup Driver](./docs/images/datagrip_setup_driver.png)
+5. Create a Data Source:
+   - Click on _New_ > _Data Source_
+   - Select the "_SPARQL Anything_" driver
+   - Set the Connection URL to `jdbc:sparql-anything://localhost`
+   
+   ![DataGrip Setup Connection](./docs/images/datagrip_setup_connection.png)
+6. Open a new console and run a query
+
+   ![DataGrip Setup Connection](./docs/images/datagrip_query.png)
 
 ### DBeaver setup and usage
 
