@@ -2,14 +2,19 @@ package io.github.sparqlanythingjdbc;
 
 import io.github.sparqlanythingjdbc.utils.LoggingConfig;
 import org.apache.jena.query.*;
+import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Statement implements java.sql.Statement {
 
     private static final Logger LOGGER = LoggingConfig.getLogger();
     private final Dataset dataset;
+    private final List<ResultSet> results = new ArrayList<>();
+    private int position = 0;
     private boolean isClosed = false;
 
     public Statement(Dataset dataset) {
@@ -23,9 +28,10 @@ public class Statement implements java.sql.Statement {
 
         try {
             Query query = QueryFactory.create(sql);
-            org.apache.jena.query.ResultSet resultSet =
-                    QueryExecutionFactory.create(query, this.dataset).execSelect();
-            return new ResultSet(this, resultSet);
+            org.apache.jena.query.ResultSet resultSet = QueryExecutionFactory.create(query, this.dataset).execSelect();
+            this.results.add(new ResultSet(this, resultSet));
+            this.results.add(null);
+            return this.results.getFirst();
         } catch (QueryParseException e) {
             throw new SQLException(e);
         }
@@ -34,6 +40,7 @@ public class Statement implements java.sql.Statement {
     @Override
     public void close() throws SQLException {
         LOGGER.finest("Calling Statement.close()");
+        // TODO: loop over results and close the ResultSets
         this.isClosed = true;
         LOGGER.info("Statement closed");
     }
@@ -70,6 +77,10 @@ public class Statement implements java.sql.Statement {
     @Override
     public ResultSet getResultSet() throws SQLException {
         LOGGER.finest("Calling Statement.getResultSet()");
+        Object result = this.results.get(this.position);
+        if (result instanceof ResultSet) {
+            return (ResultSet) result;
+        }
         return null;
     }
 
@@ -79,10 +90,15 @@ public class Statement implements java.sql.Statement {
         return -1;
     }
 
+    /**
+     * Equivalent to ResulSet's next() method.
+     */
     @Override
     public boolean getMoreResults() throws SQLException {
         LOGGER.finest("Calling Statement.getMoreResults()");
-        return false;
+        this.position++;
+        // TODO: close results obtained with getResultSet
+        return this.results.get(this.position) != null;
     }
 
     @Override
