@@ -47,7 +47,7 @@ public class ResultSetMetaData implements java.sql.ResultSetMetaData {
         if (index == -1) {
             throw new SQLException("Column '" + label + "' not found");
         }
-        return index;
+        return index + 1;
     }
 
     @Override

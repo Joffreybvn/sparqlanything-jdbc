@@ -6,6 +6,7 @@ import org.apache.jena.graph.impl.LiteralLabel;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.exec.RowSet;
+import org.apache.jena.sparql.exec.RowSetRewindable;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -26,18 +27,30 @@ public class ResultSet implements java.sql.ResultSet {
     private boolean isClosed = false;
 
     private final Statement statement;
-    private final RowSet rowSet;
+    private final RowSetRewindable rowSet;
+    private final ResultSetMetaData metadata;
     private List<LiteralLabel> values = null;
-    protected ResultSetMetaData metadata = null;
 
     public ResultSet(Statement statement, org.apache.jena.query.ResultSet resultSet) {
         LOGGER.finest("Calling ResultSet constructor with statement=..., jena.ResultSet=...");
         this.statement = statement;
-        this.rowSet = RowSet.adapt(resultSet);
+        this.rowSet = RowSet.adapt(resultSet).rewindable();
+        this.metadata = new ResultSetMetaData(
+                this.rowSet.getResultVars(),
+                this.moveNextAndUnpackRowSet()
+        );
+        this.rowSet.reset();
+    }
+
+    private List<LiteralLabel> moveNextAndUnpackRowSet() {
+        if (this.rowSet.hasNext()) {
+            Binding binding = this.rowSet.next();
+            return this.unpackRowSet(binding);
+        }
+        return null;
     }
 
     private List<LiteralLabel> unpackRowSet(Binding binding) {
-        LOGGER.finest("Calling ResultSet.unpackRowSet(Binding binding=...)");
         List<LiteralLabel> values = new ArrayList<>(binding.size());
         for (Var var : rowSet.getResultVars()) {
             Node value = binding.get(var);
@@ -51,10 +64,9 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public boolean next() throws SQLException {
         LOGGER.finest("Calling ResultSet.next()");
-        if (this.rowSet.hasNext()) {
+        this.values = this.moveNextAndUnpackRowSet();
+        if (values != null) {
             this.position++;
-            Binding binding = this.rowSet.next();
-            this.values = this.unpackRowSet(binding);
             return true;
         }
         return false;
@@ -63,12 +75,6 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
         LOGGER.finest("Calling ResultSet.getMetaData()");
-        if (this.metadata == null) {
-            this.metadata = new ResultSetMetaData(
-                    this.rowSet.getResultVars(),
-                    this.values
-            );
-        }
         return this.metadata;
     }
 
@@ -82,7 +88,7 @@ public class ResultSet implements java.sql.ResultSet {
 
     private LiteralLabel getValueByIndex(int index) {
         LOGGER.finest("Calling ResultSet.getValueByIndex(int index=" + index + ")");
-        return this.values.get(index);
+        return this.values.get(index - 1);
     }
 
     @Override
