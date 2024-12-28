@@ -114,7 +114,7 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public String getString(int index) throws SQLException {
         LOGGER.finest("Calling ResultSet.getString(int index=" + index + ")");
-        return this.getValueByIndex(index).toString();
+        return this.getValueByIndex(index).getLexicalForm();
     }
 
     @Override
@@ -330,7 +330,7 @@ public class ResultSet implements java.sql.ResultSet {
         LiteralLabel value = this.getValueByIndex(index);
 
         if (this.getMetaData().getColumnType(index) == Types.DATE) {
-            String rawDate = value.toString();
+            String rawDate = value.getLexicalForm();
             try {
                 LocalDate localDate = LocalDate.parse(rawDate);
                 if (calendar != null) {
@@ -374,7 +374,7 @@ public class ResultSet implements java.sql.ResultSet {
         LiteralLabel value = this.getValueByIndex(index);
 
         if (this.getMetaData().getColumnType(index) == Types.TIME) {
-            String rawTime = value.toString();
+            String rawTime = value.getLexicalForm();
             try {
                 LocalTime localTime = LocalTime.parse(rawTime);
                 if (calendar != null) {
@@ -419,7 +419,7 @@ public class ResultSet implements java.sql.ResultSet {
         LiteralLabel value = this.getValueByIndex(index);
 
         if (this.getMetaData().getColumnType(index) == Types.TIMESTAMP) {
-            String rawTimestamp = value.toString();
+            String rawTimestamp = value.getLexicalForm();
             try {
                 LocalDateTime localDateTime = LocalDateTime.parse(rawTimestamp);
                 if (calendar != null) {
