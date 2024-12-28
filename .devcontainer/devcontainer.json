@@ -1,0 +1,12 @@
+{
+  "name": "Java 21 Dev Container",
+  "image": "mcr.microsoft.com/openjdk/jdk:21-ubuntu",
+  "containerUser": "root",
+  "remoteUser": "developer",
+  "features": {
+    "ghcr.io/devcontainers/features/java:21": {
+      "version": "none",
+      "installMaven": "true"
+    }
+  }
+}
