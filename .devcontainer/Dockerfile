@@ -9,6 +9,7 @@ RUN apt-get update \
        maven \
        # Extras
        git \
+       openssh-client \
        curl \
     && rm -rf /var/lib/apt/lists/*
 
