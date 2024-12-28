@@ -690,6 +690,9 @@ public class ResultSet implements java.sql.ResultSet {
     @Override
     public int getType() throws SQLException {
         LOGGER.finest("Calling ResultSet.getType()");
+        if (this.isClosed()) {
+            throw new SQLException("ResultSet is closed");
+        }
         return ResultSet.TYPE_FORWARD_ONLY;
     }
 

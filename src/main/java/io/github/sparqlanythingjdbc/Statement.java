@@ -76,7 +76,7 @@ public class Statement implements java.sql.Statement {
     @Override
     public int getUpdateCount() throws SQLException {
         LOGGER.finest("Calling Statement.getUpdateCount()");
-        return 0;
+        return -1;
     }
 
     @Override
