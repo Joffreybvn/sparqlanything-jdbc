@@ -8,7 +8,7 @@
 
 ## Quickstart
 
-➡️ See [Usage](#Usage) to set up the driver in [DataGrip](#datagrip-setup-and-usage), [DBeaver](#dbeaver-setup-and-usage), [JayDeBeApi (Python)](#jaydebeapi-setup-and-usage) and [Airflow](#airflow-setup-and-usage).
+➡️ See [Usage](#Usage) to set up the driver in [DataGrip](#datagrip-setup-and-usage), [DBeaver](#dbeaver-setup-and-usage), [JayDeBeApi (Python)](#jaydebeapi-python-setup-and-usage) and [Airflow](#airflow-setup-and-usage).
 
 1. **Add Dependency** (if using Maven/Gradle) or drop the JAR into your classpath.
 2. **Copy the [sample.xml](./sample.xml)** data locally
@@ -99,7 +99,7 @@ Currently supported list of typings and their mappings to Java and SQL types. Fe
 
 Quick guide on how to add the driver to Jetbrains' [DataGrip](https://www.jetbrains.com/datagrip/) and run a SPARQL query.
 
-1. Download the JDBC driver bundle.<br>
+1. Download the [JDBC driver bundle](https://github.com/Joffreybvn/sparqlanything-jdbc/releases).<br>
    **Alternatively**, clone this repository and run `make build` and `make dependencies`. Then place the generated _target/sparql-anything-jdbc.jar_ into _target/dependency_.
 2. Open DataGrip, navigate to the _Database Explorer_, and click on _New_ > _Driver_.
 3. Configure the driver:
