@@ -8,7 +8,7 @@
 
 ## Quickstart
 
-➡️ See [Usage](#Usage) to set up the driver in [DataGrip](#DataGrip setup and usage), DBeaver, JayDeBeApi (Python) and Airflow.
+➡️ See [Usage](#Usage) to set up the driver in [DataGrip](#datagrip-setup-and-usage), [DBeaver](#dbeaver-setup-and-usage), [JayDeBeApi (Python)](#jaydebeapi-setup-and-usage) and [Airflow](#airflow-setup-and-usage).
 
 1. **Add Dependency** (if using Maven/Gradle) or drop the JAR into your classpath.
 2. **Copy the [sample.xml](./sample.xml)** data locally
@@ -66,12 +66,39 @@ Currently, this driver focuses on SPARQL `SELECT` queries.
 | **ASK**       |     ❌      | Return `true`/`false` indicating whether a pattern exists in the data. _Not implemented yet_. |
 | **DESCRIBE**  |     ❌      | Return RDF data describing a resource. _Not implemented yet_.                                 |
 
+### Type mapping
+
+Currently supported list of typings and their mappings to Java and SQL types. Feel free to open an [Issue](./issues) or a [Pull Request](./pulls) to add/request new ones.
+
+| **XSD Type**   | **Java Class**        | **SQL Type** (`java.sql.Types`) |
+|:---------------|:----------------------|:--------------------------------|
+| untyped        | `String.class`        | `VARCHAR`                       |
+| `xsd:float`    | `Float.class`         | `FLOAT`                         |
+| `xsd:double`   | `Double.class`        | `DOUBLE`                        |
+| `xsd:int`      | `Integer.class`       | `INTEGER`                       |
+| `xsd:long`     | `Long.class`          | `BIGINT`                        |
+| `xsd:short`    | `Short.class`         | `SMALLINT`                      |
+| `xsd:byte`     | `Byte.class`          | `BINARY`                        |
+| `xsd:boolean`  | `Boolean.class`       | `BOOLEAN`                       |
+| `xsd:string`   | `String.class`        | `VARCHAR`                       |
+| `xsd:anyURI`   | `URI.class`           | `VARCHAR`                       |
+| `xsd:decimal`  | `BigDecimal.class`    | `DECIMAL`                       |
+| `xsd:integer`  | `BigInteger.class`    | `BIGINT`                        |
+| `xsd:date`     | `java.sql.Date`*      | `DATE`                          |
+| `xsd:dateTime` | `java.sql.Timestamp`* | `TIMESTAMP`                     |
+| `xsd:time`     | `java.sql.Time`*      | `TIME`                          |
+
+**Notes:**
+
+- The driver do the best effort to convert types. _E.g._: You can `getInt()` an untyped String to parse it and getting it as int.
+- For `DATE`, `TIMESTAMP` and `TIME`, driver tries to convert first to `java.sql.Date`, `java.sql.Time` and `java.sql.Timestamp` respectively. If impossible, it falls back to String.
+
 ## Usage
 
 ### DataGrip setup and usage
 
 ### DBeaver setup and usage
 
-### JayDeBeApi setup and usage
+### JayDeBeApi (Python) setup and usage
 
 ### Airflow setup and usage

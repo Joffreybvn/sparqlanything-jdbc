@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class JDBCTypeMap {
 
+    // XSD types defined with JavaClass (in org.apache.jena.datatypes.xsd.XSDDatatype - jena-core)
     private static final Map<Class<?>, Integer> javaClassMap = Map.ofEntries(
             Map.entry(Float.class, Types.FLOAT),
             Map.entry(Double.class, Types.DOUBLE),
@@ -22,6 +23,7 @@ public class JDBCTypeMap {
             Map.entry(URI.class, Types.VARCHAR)
     );
 
+    // XSD types defined without JavaClass, and only with XSD uri (in org.apache.jena.datatypes.xsd.XSDDatatype - jena-core)
     private static final Map<String, Integer> uriMap = Map.of(
             "http://www.w3.org/2001/XMLSchema#date", Types.DATE,
             "http://www.w3.org/2001/XMLSchema#dateTime", Types.TIMESTAMP,
