@@ -2,7 +2,6 @@ package io.github.sparqlanythingjdbc;
 
 import io.github.sparqlanythingjdbc.utils.LoggingConfig;
 import org.apache.jena.query.*;
-import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -71,7 +70,8 @@ public class Statement implements java.sql.Statement {
     @Override
     public boolean execute(String sql) throws SQLException {
         LOGGER.finest("Calling Statement.execute(String sql=" + sql + ")");
-        return false;
+        ResultSet result = this.executeQuery(sql);
+        return result != null;
     }
 
     @Override
