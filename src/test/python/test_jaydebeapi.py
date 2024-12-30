@@ -28,7 +28,7 @@ QUERY = """
     }
 """
 
-class TestSJayDeBeApi:
+class TestJayDeBeApi:
     """
     This class demonstrates how to test SparqlAnything via JayDeBeAPI in a pytest context.
     It checks that the query returns exactly the three expected rows.
