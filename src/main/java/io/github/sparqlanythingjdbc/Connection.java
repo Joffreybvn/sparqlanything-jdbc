@@ -30,7 +30,19 @@ public class Connection implements java.sql.Connection {
     @Override
     public Statement createStatement() throws SQLException {
         LOGGER.finest("Calling Connection.createStatement()");
-        return new Statement(this.dataset);
+        return new Statement(this, this.dataset);
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        LOGGER.finest("Calling Connection.prepareStatement(String sql = " + sql + ")");
+        return new PreparedStatement(this, this.dataset, sql);
+    }
+
+    @Override
+    public CallableStatement prepareCall(String sql) throws SQLException {
+        LOGGER.finest("Calling Connection.prepareCall(String sql = " + sql + ")");
+        return null;
     }
 
     @Override
@@ -50,19 +62,6 @@ public class Connection implements java.sql.Connection {
     public DatabaseMetaData getMetaData() throws SQLException {
         LOGGER.finest("Calling Connection.getMetaData()");
         return new DatabaseMetaData();
-    }
-
-    // Placeholder methods (not fully implemented) — now with logging
-    @Override
-    public PreparedStatement prepareStatement(String sql) throws SQLException {
-        LOGGER.finest("Calling Connection.prepareStatement(String sql = " + sql + ")");
-        return null;
-    }
-
-    @Override
-    public CallableStatement prepareCall(String sql) throws SQLException {
-        LOGGER.finest("Calling Connection.prepareCall(String sql = " + sql + ")");
-        return null;
     }
 
     @Override

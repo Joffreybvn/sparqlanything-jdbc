@@ -4,26 +4,34 @@ FROM ubuntu:22.04
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        software-properties-common \
-       sudo \
-       maven \
-       make \
-       git \
-       openssh-client \
-       gnupg2 \
-       curl \
-    && rm -rf /var/lib/apt/lists/*
+       gnupg2
 
-# Add the PPA that contains OpenJDK 21, then install it
 RUN add-apt-repository ppa:openjdk-r/ppa -y \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-       openjdk-21-jdk \
+        sudo \
+        maven \
+        make \
+        git \
+        openssh-client \
+        gnupg2 \
+        curl \
+        openjdk-21-jdk \
+        python3 \
+        python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # Optionally, set OpenJDK 21 as the default Java if multiple versions are installed.
 # If it's the only JDK, it's typically already default. But just to be safe:
 RUN update-alternatives --set java /usr/lib/jvm/java-21-openjdk-amd64/bin/java \
     && update-alternatives --set javac /usr/lib/jvm/java-21-openjdk-amd64/bin/javac
+
+# Install Python dependencies
+RUN ln -s /usr/bin/python3 /usr/bin/python \
+    && pip install --upgrade pip \
+    && pip install \
+        pytest \
+        JayDeBeApi
 
 # Create a non-root user (developer) with passwordless sudo
 RUN useradd -m developer \

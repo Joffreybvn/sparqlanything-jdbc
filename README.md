@@ -106,6 +106,7 @@ Quick guide on how to add the driver to Jetbrains' [DataGrip](https://www.jetbra
    - Click on _New Driver_, name it "_SPARQL Anything_".
    - In _Driver Files_, click on _Add_ > _Custom Jars_ and select all the jars previously downloaded.
    - In the _Class_ dropdown field, select `io.github.sparqlqnythingjdbc.Driver`
+   - In _Options_ > _Connections_, set `SELECT * WHERE {}` as _Keep-alive Query_.
    - _Apply_
    
    ![DataGrip Setup Driver](./docs/images/datagrip_setup_driver.png)

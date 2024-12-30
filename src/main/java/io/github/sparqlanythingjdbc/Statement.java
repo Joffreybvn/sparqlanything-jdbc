@@ -11,13 +11,15 @@ import java.util.logging.Logger;
 public class Statement implements java.sql.Statement {
 
     private static final Logger LOGGER = LoggingConfig.getLogger();
+    private final Connection connection;
     private final Dataset dataset;
     private final List<ResultSet> results = new ArrayList<>();
     private int position = 0;
     private boolean isClosed = false;
 
-    public Statement(Dataset dataset) {
+    public Statement(Connection connection, Dataset dataset) {
         LOGGER.finest("Calling Statement constructor with dataset=...");
+        this.connection = connection;
         this.dataset = dataset;
     }
 
@@ -154,7 +156,7 @@ public class Statement implements java.sql.Statement {
     @Override
     public Connection getConnection() throws SQLException {
         LOGGER.finest("Calling Statement.getConnection()");
-        return null;
+        return this.connection;
     }
 
     @Override
