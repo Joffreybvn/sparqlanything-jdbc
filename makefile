@@ -2,6 +2,7 @@
 
 build:
 	mvn clean package
+	# Copy jar into /build folder
 	mkdir -p ./build
 	JAR_FILE=$$(ls target/sparql-anything-jdbc-*.jar); \
 	cp "$${JAR_FILE}" "./build/"
@@ -12,11 +13,11 @@ bundle: build
     		-DincludeScope=runtime \
     		-DexcludeTransitive=false
 
-    # Copy the main jar into build/bundle
+	# Copy the main jar into build/bundle
 	JAR_FILE=$$(ls target/sparql-anything-jdbc-*.jar); \
 	cp "$${JAR_FILE}" "./build/bundle/"
 
-	# Remove all files (type f) in 'build/bundle' that are not *.jar
+	# Remove all files in 'build/bundle' that are not *.jar
 	find ./build/bundle -type f ! -name '*.jar' -delete
 
 	# Zip the bundle folder
