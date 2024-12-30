@@ -24,4 +24,4 @@ bundle: build
 
 test: bundle
 	mvn test
-	python -m pytest ./src/test/java/python/test_jaydebeapi.py
+	python -m pytest ./src/test/python/test_jaydebeapi.py
