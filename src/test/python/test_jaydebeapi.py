@@ -43,6 +43,7 @@ class TestJayDeBeApi:
         conn = jaydebeapi.connect(
             "io.github.sparqlanythingjdbc.Driver",
             "jdbc:sparql-anything://localhost",
+            # Note: you must execute `make bundle` before running below line
             jars=glob.glob(os.path.join("./build/bundle", "*.jar"))
         )
 
