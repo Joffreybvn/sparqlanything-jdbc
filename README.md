@@ -97,14 +97,14 @@ Currently supported list of typings and their mappings to Java and SQL types. Fe
 
 ### DataGrip setup and usage
 
-Quick guide on how to add the driver to Jetbrains' [DataGrip](https://www.jetbrains.com/datagrip/) and run a SPARQL query.
+[DataGrip](https://www.jetbrains.com/datagrip/) is JetBrains’ cross-platform IDE for databases and SQL. It makes a user-friendly frontend for your SPARQL queries. Here is how to add the driver and use it:
 
-1. Download the [JDBC driver bundle](https://github.com/Joffreybvn/sparqlanything-jdbc/releases).<br>
-   **Alternatively**, clone this repository and run `make build` and `make dependencies`. Then place the generated _target/sparql-anything-jdbc.jar_ into _target/dependency_.
+1. Download the [JDBC driver bundle](https://github.com/Joffreybvn/sparqlanything-jdbc/releases)., and extract it.br>
+   **Alternatively**, clone this repository and run `make bundle`. The bundle is located in `build/bundle`.
 2. Open DataGrip, navigate to the _Database Explorer_, and click on _New_ > _Driver_.
 3. Configure the driver:
    - Click on _New Driver_, name it "_SPARQL Anything_".
-   - In _Driver Files_, click on _Add_ > _Custom Jars_ and select all the jars previously downloaded.
+   - In _Driver Files_, click on _Add_ > _Custom Jars_ and select all the jars previously downloaded (bundle).
    - In the _Class_ dropdown field, select `io.github.sparqlqnythingjdbc.Driver`
    - In _Options_ > _Connections_, set `SELECT * WHERE {}` as _Keep-alive Query_.
    - _Apply_
@@ -123,5 +123,57 @@ Quick guide on how to add the driver to Jetbrains' [DataGrip](https://www.jetbra
 ### DBeaver setup and usage
 
 ### JayDeBeApi (Python) setup and usage
+
+[JayDeBeApi](https://pypi.org/project/JayDeBeApi/) is a Python package which turn any JDBC driver into a [Python DB API 2.0](https://peps.python.org/pep-0249/), and makes it usable directly in Python. Here is how to set up and use the driver:
+
+1. Download the [JDBC driver bundle](https://github.com/Joffreybvn/sparqlanything-jdbc/releases), and extract it.<br>
+   **Alternatively**, clone this repository and run `make bundle`. The bundle is located in `build/bundle`.
+2. Copy and execute the following example code:<br>
+   Note: **Copy the [sample.xml](./sample.xml)** data locally
+
+   ```python
+   import glob
+   import os
+   import jaydebeapi
+   
+   # Load the driver and setup the connection
+   conn = jaydebeapi.connect(
+      "io.github.sparqlanythingjdbc.Driver",
+      url="jdbc:sparql-anything://localhost",   
+      # Set the path to the bundle folder (containing all the jars).
+      jars=glob.glob(os.path.join("./YOUR/BUNDLE/PATH", '*.jar')),
+   )
+   
+   # Execute a SPARQL query
+   curs = conn.cursor()
+   curs.execute("""
+      PREFIX xyz: <http://sparql.xyz/facade-x/data/>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX fx: <http://sparql.xyz/facade-x/ns/>
+      PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+      SELECT
+         ?name
+         (xsd:boolean(?isHeathlyRaw) AS ?isHeathly)
+         (xsd:float(?priceRaw) AS ?price)
+         (xsd:integer(?fatRaw) AS ?fat)
+         (xsd:date(?productionDateRaw) AS ?productionDate)
+      WHERE {
+         SERVICE <x-sparql-anything:sample.xml> {
+            ?food xyz:nameFr ?name ;
+               xyz:isHeathly ?isHeathlyRaw ;
+               rdf:_1 ?priceField ;
+               rdf:_2 ?fatField ;
+               rdf:_3 ?productionDateField .
+            ?priceField rdf:_1 ?priceRaw .
+            ?fatField rdf:_1 ?fatRaw .
+            ?productionDateField rdf:_1 ?productionDateRaw .
+         }
+      }""")
+   
+   # Print the result and close
+   print(curs.fetchall())
+   curs.close()
+   conn.close()
+   ```
 
 ### Airflow setup and usage
